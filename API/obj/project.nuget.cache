@@ -1,15 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2F2h1XKfb0K4XGrC1IrbU5OV27OFebJ8aupobwpImHzdafAVZQFAoV2BSiBl25hVYqlhT/7wJTNeaI/XOqEzMQ==",
+  "dgSpecHash": "CD+sdd89FIPUtF4enO9W6FFmTQ5wpgW7H3qhSnUfHK0ighuUssnThMcdaMZP8FhYoo0LcUIrY/E4x1uXs25w3w==",
   "success": true,
   "projectFilePath": "C:\\Personal Project\\eComStore\\API\\API.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\numan\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
-    "C:\\Users\\numan\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
-    "C:\\Users\\numan\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
-    "C:\\Users\\numan\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
-    "C:\\Users\\numan\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
-    "C:\\Users\\numan\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.4.0\\swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512"
-  ],
+  "expectedPackageFiles": [],
   "logs": []
 }

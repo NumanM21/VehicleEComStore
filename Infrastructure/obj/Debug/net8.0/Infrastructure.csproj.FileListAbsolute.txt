@@ -13,3 +13,4 @@ C:\Personal Project\eComStore\Infrastructure\obj\Debug\net8.0\Infrastructure.dll
 C:\Personal Project\eComStore\Infrastructure\obj\Debug\net8.0\refint\Infrastructure.dll
 C:\Personal Project\eComStore\Infrastructure\obj\Debug\net8.0\Infrastructure.pdb
 C:\Personal Project\eComStore\Infrastructure\obj\Debug\net8.0\ref\Infrastructure.dll
+C:\Personal Project\eComStore\Infrastructure\obj\Debug\net8.0\Infrastructure.sourcelink.json
