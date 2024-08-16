@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container. // These are things we INJECT into OTHER classes 
 builder.Services.AddDbContext<StoreContext>(options => 
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDatabaseConnection"));
 });
 
 builder.Services.AddControllers();
