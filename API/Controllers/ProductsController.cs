@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [ApiController]
+    [ApiController] // We don't have to use attribute in out 'create' such as [FromBody] Product prod -> This attribute does automatic model binding for us
     [Route("api/[controller]")] // routing via api/products ([] placeholder for class name, excluding the controller) 
     public class ProductsController(StoreContext context) : ControllerBase
     {
@@ -41,6 +41,40 @@ namespace API.Controllers
 
             return prod;
         }
+
+        [HttpPut("{id:int}")] // Update product
+        public async Task<ActionResult> UpdateProduct(int id, Product prod) // Not returning anything from ActionResult 
+        {
+            if (prod.Id != id || !ProductExists(id)) return BadRequest("Product cannot be updated.");
+
+            // EF doesn't know prod we pass in is an ENTITY so we have to tell EF to TRACK the entity we passed in and it's being modified
+            context.Entry(prod).State = EntityState.Modified;
+
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        } 
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteProduct(int id)
+        {
+            var prod = await context.Products.FindAsync(id);
+
+            if (prod == null) return NotFound("Product not found in Db");
+
+            context.Products.Remove(prod); // EF will now be tracking this removal
+
+            await context.SaveChangesAsync(); // Updates the Db!
+
+            return NoContent();
+
+        }
+
+        private bool ProductExists(int id) // Use this in our Update method to check if the id we passing into root MATCHES the product id we want to update
+        {
+           return context.Products.Any(x => x.Id == id);
+        }
+
         
     }
 }
