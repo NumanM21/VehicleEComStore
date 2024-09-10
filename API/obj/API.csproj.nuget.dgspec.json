@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Personal Project\\eComStore\\API\\API.csproj": {}
+    "C:\\Personal Project\\eComStore\\api\\API.csproj": {}
   },
   "projects": {
-    "C:\\Personal Project\\eComStore\\API\\API.csproj": {
+    "C:\\Personal Project\\eComStore\\api\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Personal Project\\eComStore\\API\\API.csproj",
+        "projectUniqueName": "C:\\Personal Project\\eComStore\\api\\API.csproj",
         "projectName": "API",
-        "projectPath": "C:\\Personal Project\\eComStore\\API\\API.csproj",
+        "projectPath": "C:\\Personal Project\\eComStore\\api\\API.csproj",
         "packagesPath": "C:\\Users\\numan\\.nuget\\packages\\",
-        "outputPath": "C:\\Personal Project\\eComStore\\API\\obj\\",
+        "outputPath": "C:\\Personal Project\\eComStore\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\numan\\AppData\\Roaming\\NuGet\\NuGet.Config",
