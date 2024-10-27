@@ -11,7 +11,7 @@ namespace Core.Entities
         public required string FuelType { get; set; }
         public required string Gearbox { get; set; }
         public required int Mileage { get; set; }
-        public required string Model { get; set; }    
+        public required string Type { get; set; }    
         public required string Brand { get; set; }   
         public required string PictureUrl { get; set; }  
         public int QuantityInStock { get; set; }

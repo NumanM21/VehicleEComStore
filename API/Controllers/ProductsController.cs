@@ -77,20 +77,6 @@ namespace API.Controllers
 
         }
 
-        [HttpGet("brands")]
-        public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
-        {
-            // Need to wrap in OK due to error thrown by ActionResult
-            return Ok(await productRepository.GetBrandsAsync());
-        }
-        
-        [HttpGet("models")]
-        public async Task<ActionResult<IReadOnlyList<string>>> GetModels()
-        {
-            // Need to wrap in OK due to error thrown by ActionResult
-            return Ok(await productRepository.GetModelsAsync());
-        }
-
         private bool ProductExists(int id) // Use this in our Update method to check if the id we passing into root MATCHES the product id we want to update
         {
            return productRepository.ProductExists(id); // Similar to before, but doing the check in our repo method rather than here
