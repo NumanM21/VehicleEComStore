@@ -1,8 +1,7 @@
 using Core.Entities;
 using Core.Interfaces;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace API.Controllers
 {
@@ -13,12 +12,13 @@ namespace API.Controllers
         // ActionResult -> Allows us to return HTTP type of responses
         // Task -> Used with async to delegate work until we reach await
         // IEnumerable -> List, with defined type (product) which we can return through the action result
-        [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts()
+        
+        [HttpGet]  // We would have to use [FromQuery so API knows to look for query STRINGS, but since we are using api/[Controller], this is done for us
+        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, string? model, string? sort)
         {
             // Need to get list of products from DB -> So we use Dependency Injection in Constructor of CLASS to access DB through StoreContext!
 
-            return Ok(await productRepository.GetProductsAsync()); // Ok to remove type error from GetProductAsync
+            return Ok(await productRepository.GetProductsAsync(brand, model, sort)); // Ok to remove type error from GetProductAsync
         }
 
         [HttpGet("{id:int}")] // Specify id in root which has to be type int --> api/products/id  ==> This id from Http root will be passed as a parameter

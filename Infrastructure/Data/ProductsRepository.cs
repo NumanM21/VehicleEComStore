@@ -1,4 +1,3 @@
-
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +21,28 @@ namespace Infrastructure.Data
             return await context.Products.FindAsync(Id);
         }
 
-        public async Task<IReadOnlyList<Product>> GetProductsAsync()
+        public async Task<IReadOnlyList<Product>> GetProductsAsync(string? brand, string? model, string? sort)
         {
-           return await context.Products.ToListAsync();
+            // Can build our query as depending on arguments passed in through our parameters then return that
+            var query = context.Products.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(brand))
+                query = query.Where(x => x.Brand == brand);
+
+            if (!string.IsNullOrWhiteSpace(model))
+                query = query.Where(x => x.Model == model);
+
+
+            // Sorting query
+            query = sort switch
+            {
+                "priceAscending" => query.OrderBy(x => x.Price),
+                "priceDescending" => query.OrderByDescending(x => x.Price),
+                _ => query.OrderBy(x => x.Name)
+            };
+
+
+            return await query.ToListAsync();
         }
 
         public bool ProductExists(int id)
