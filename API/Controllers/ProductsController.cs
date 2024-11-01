@@ -28,7 +28,7 @@ namespace API.Controllers
 
             if (product == null) return NotFound();
 
-            return product;
+            return Ok(product);
         }
 
         [HttpPost] // Create Product in our DB
