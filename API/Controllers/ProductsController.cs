@@ -7,7 +7,8 @@ namespace API.Controllers
 {
     [ApiController] // We don't have to use attribute in out 'create' such as [FromBody] Product prod -> This attribute does automatic model binding for us
     [Route("api/[controller]")] // routing via api/products ([] placeholder for class name, excluding the controller) 
-    public class ProductsController(IProductRepository productRepository) : ControllerBase // Have to use interface since we specified this FIRST in our service
+    public class ProductsController(IGenericRepository<Product>  repository) : ControllerBase // Have to use interface since we specified this FIRST in our service
+    // Here is where we can implement our Generic Repo, but now we give it a type (since this is a PRODUCTS controller!)
     {
         // ActionResult -> Allows us to return HTTP type of responses
         // Task -> Used with async to delegate work until we reach await
@@ -18,13 +19,13 @@ namespace API.Controllers
         {
             // Need to get list of products from DB -> So we use Dependency Injection in Constructor of CLASS to access DB through StoreContext!
 
-            return Ok(await productRepository.GetProductsAsync(brand, model, sort)); // Ok to remove type error from GetProductAsync
+            return Ok(await repository.GetALlAsync()); // Ok to remove type error
         }
 
         [HttpGet("{id:int}")] // Specify id in root which has to be type int --> api/products/id  ==> This id from Http root will be passed as a parameter
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await productRepository.GetProductByIdAsync(id);
+            var product = await repository.GetByIdAsync(id);
 
             if (product == null) return NotFound();
 
@@ -34,9 +35,9 @@ namespace API.Controllers
         [HttpPost] // Create Product in our DB
         public async Task<ActionResult<Product>> CreateProduct(Product prod)
         {   
-            productRepository.AddProduct(prod);
+            repository.Add(prod);
 
-            if (await productRepository.SaveChangesAsync())
+            if (await repository.SaveAllAsync())
             {
                 return CreatedAtAction("GetProduct", new {id = prod.Id}, prod); // new.. has to match the httpget of the GetProduct method above (Gives us a header to location of this product)
             }
@@ -49,9 +50,9 @@ namespace API.Controllers
         {
             if (prod.Id != id || !ProductExists(id)) return BadRequest("Product cannot be updated.");
 
-           productRepository.UpdateProduct(prod);
+           repository.Update(prod);
 
-            if (await productRepository.SaveChangesAsync())
+            if (await repository.SaveAllAsync())
             {
                 return NoContent();
             }
@@ -62,13 +63,13 @@ namespace API.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteProduct(int id)
         {
-            var prod = await productRepository.GetProductByIdAsync(id);
+            var prod = await repository.GetByIdAsync(id);
 
             if (prod == null) return NotFound("Product not found in Db");
 
-            productRepository.DeleteProduct(prod);
+            repository.Delete(prod);
 
-            if (await productRepository.SaveChangesAsync())
+            if (await repository.SaveAllAsync())
             {
                 return NoContent();
             }
@@ -79,9 +80,22 @@ namespace API.Controllers
 
         private bool ProductExists(int id) // Use this in our Update method to check if the id we passing into root MATCHES the product id we want to update
         {
-           return productRepository.ProductExists(id); // Similar to before, but doing the check in our repo method rather than here
+           return repository.EntityExists(id); // Similar to before, but doing the check in our repo method rather than here
+        }
+        
+        //TODO: Need to implement these with specification pattern -> Can't be done with generics!
+        [HttpGet("brands")]
+        public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
+        {
+            return Ok();
+        }
+        //TODO: Need to implement these with specification pattern -> Can't be done with generics!
+        [HttpGet("models")]
+        public async Task<ActionResult<IReadOnlyList<string>>> GetModels()
+        {
+            return Ok();
         }
 
-        
+
     }
 }

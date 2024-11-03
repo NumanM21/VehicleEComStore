@@ -16,6 +16,7 @@ builder.Services.AddControllers();
 
 // AddScoped - Service will last for as long as HTTP request is open
 builder.Services.AddScoped<IProductRepository, ProductsRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); // typeof since we don't know the exact type at this point
 
 var app = builder.Build(); // Everything BEFORE this line is a SERVICE. AFTER this line is MIDDLEWARE
 
