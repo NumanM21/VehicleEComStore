@@ -17,6 +17,16 @@ public class GenericRepository<T> (StoreContext context) : IGenericRepository<T>
         return await context.Set<T>().ToListAsync();
     }
 
+    public async Task<T?> GetEntityWithSpecification(ISpecification<T> specification)
+    {
+        return await ApplySpecification(specification).FirstOrDefaultAsync(); // Return first item or default (which would be null -> Check for this in our controller)
+    }
+
+    public async Task<IReadOnlyList<T>> GetEntitiesWithSpecification(ISpecification<T> specification)
+    {// This is a Queryable at this point, so we use ToListAsync();
+        return await ApplySpecification(specification).ToListAsync(); // Spec would filter our list, and return the list we are looking for
+    }
+
     public void Add(T entity)
     {
         context.Set<T>() // This is the point we set the type
@@ -42,5 +52,12 @@ public class GenericRepository<T> (StoreContext context) : IGenericRepository<T>
     public bool EntityExists(int id)
     {
        return context.Set<T>().Any(x => x.Id == id); 
+    }
+    
+    // Helper method for specification -> We use our EVALUATOR here to break down the expression into an IQueryable to then pass into our DB to retrieve what we want
+    private IQueryable<T> ApplySpecification(ISpecification<T> specification)
+    {
+        // Can call .GetQuery since we made the method static
+        return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), specification);
     }
 }

@@ -1,5 +1,6 @@
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -18,8 +19,14 @@ namespace API.Controllers
         public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, string? model, string? sort)
         {
             // Need to get list of products from DB -> So we use Dependency Injection in Constructor of CLASS to access DB through StoreContext!
-
-            return Ok(await repository.GetALlAsync()); // Ok to remove type error
+            
+            // Create our specification (expression to what we want)
+            var spec = new ProductFilterSpecification(brand, model);
+            
+            // Pass our spec to become an expression to retrieve the relevant products from DB
+            var prodWhichMeetSpec = await repository.GetEntitiesWithSpecification(spec);
+            
+            return Ok(prodWhichMeetSpec); // Ok to remove type error
         }
 
         [HttpGet("{id:int}")] // Specify id in root which has to be type int --> api/products/id  ==> This id from Http root will be passed as a parameter

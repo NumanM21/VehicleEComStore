@@ -6,6 +6,8 @@ public interface IGenericRepository<T> where T : BaseEntity // BaseEntity -> We 
 {
     Task<T?> GetByIdAsync(int id);
     Task<IReadOnlyList<T>> GetALlAsync();
+    Task<T?> GetEntityWithSpecification(ISpecification<T> specification);
+    Task<IReadOnlyList<T>> GetEntitiesWithSpecification(ISpecification<T> specification); 
     void Add(T entity);
     void Update(T entity);
     void Delete(T entity);
