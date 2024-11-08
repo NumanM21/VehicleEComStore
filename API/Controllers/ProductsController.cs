@@ -21,7 +21,7 @@ namespace API.Controllers
             // Need to get list of products from DB -> So we use Dependency Injection in Constructor of CLASS to access DB through StoreContext!
             
             // Create our specification (expression to what we want)
-            var spec = new ProductFilterSpecification(brand, model);
+            var spec = new ProductSpecification(brand, model, sort);
             
             // Pass our spec to become an expression to retrieve the relevant products from DB
             var prodWhichMeetSpec = await repository.GetEntitiesWithSpecification(spec);
