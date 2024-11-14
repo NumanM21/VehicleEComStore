@@ -27,6 +27,16 @@ public class GenericRepository<T> (StoreContext context) : IGenericRepository<T>
         return await ApplySpecification(specification).ToListAsync(); // Spec would filter our list, and return the list we are looking for
     }
 
+    public async Task<TResult?> GetEntityWithSpecification<TResult>(ISpecification<T, TResult> specification)
+    {
+        return await ApplySpecification(specification).FirstOrDefaultAsync();
+    }
+
+    public async Task<IReadOnlyList<TResult>> GetEntitiesWithSpecification<TResult>(ISpecification<T, TResult> specification)
+    {
+        return await ApplySpecification(specification).ToListAsync(); // Specification will have T and TResult, so will automatically choose the overloaded method we created
+    }
+
     public void Add(T entity)
     {
         context.Set<T>() // This is the point we set the type
@@ -59,5 +69,12 @@ public class GenericRepository<T> (StoreContext context) : IGenericRepository<T>
     {
         // Can call .GetQuery since we made the method static
         return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), specification);
+    }
+    
+    // This version if for projection (where we want to pull distinct models and brands of cars)
+    private IQueryable<TResult> ApplySpecification<TResult>(ISpecification<T, TResult> specification)
+    {
+        // Can call .GetQuery since we made the method static
+        return SpecificationEvaluator<T>.GetQuery<T, TResult>(context.Set<T>().AsQueryable(), specification);
     }
 }

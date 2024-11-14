@@ -90,17 +90,21 @@ namespace API.Controllers
            return repository.EntityExists(id); // Similar to before, but doing the check in our repo method rather than here
         }
         
-        //TODO: Need to implement these with specification pattern -> Can't be done with generics!
+        
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
         {
-            return Ok();
+            var brandSpec = new BrandSpecification();
+            
+            return Ok(await repository.GetEntitiesWithSpecification(brandSpec));
         }
         //TODO: Need to implement these with specification pattern -> Can't be done with generics!
         [HttpGet("models")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetModels()
         {
-            return Ok();
+            var modelSpec = new ModelSpecification();
+            
+            return Ok(await repository.GetEntitiesWithSpecification(modelSpec));
         }
 
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
-    public class ProductsRepository(StoreContext context) : IProductRepository
+    public class ProductsRepository(StoreContext context) : IProductRepository   // This will be replaced by the ProductSpecification 
     {
         public void AddProduct(Product product)
         {
