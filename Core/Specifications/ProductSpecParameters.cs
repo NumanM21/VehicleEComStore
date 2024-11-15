@@ -3,6 +3,18 @@
 public class ProductSpecParameters
 {
     
+    // Parameters to define the boundaries of our pagination and to track 
+    private const int PageSizeMax = 25;
+    public int PageIndex { get; set; } = 1;
+    private int _pageSize = 4;
+
+    public int PageSize
+    {
+        get => _pageSize;
+        set => _pageSize = (value > PageSizeMax) ? PageSizeMax : value;
+    }
+    
+    
     private List<string> _brands = []; // Backing-field initialized to empty list 
 
     public List<string> Brands

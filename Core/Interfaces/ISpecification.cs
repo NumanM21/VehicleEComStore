@@ -11,6 +11,12 @@ public interface ISpecification<T>
     Expression<Func<T, object>>? OrderBy { get; } // Use object since we can order by number (decimal) or name (string)
     Expression<Func<T, object>>? OrderByDescending { get; }
     bool IsDistinct { get; } // Will be used for the .Distinct() in LINQ where we only pull 1 of EACH model and brand
+    
+    int Take { get; } // Take for number of entities we take for pagination
+    int Skip { get; } // For pagination
+    bool IsPaginationEnabled { get; }
+    IQueryable<T> ApplyCriteria(IQueryable<T> query); // Used to help us get totalCount in pagination
+
 }
 
 // We need this below for PROJECTION (Take type T and return TRESULT) -> Needed for us to GetAllAsync for DISTINCT MODELS and BRANDS

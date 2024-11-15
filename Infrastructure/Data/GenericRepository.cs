@@ -63,7 +63,16 @@ public class GenericRepository<T> (StoreContext context) : IGenericRepository<T>
     {
        return context.Set<T>().Any(x => x.Id == id); 
     }
-    
+
+    public async Task<int> TotalCountAsync(ISpecification<T> specification)
+    {
+        var query = context.Set<T>().AsQueryable();
+
+        query = specification.ApplyCriteria(query);
+
+        return await query.CountAsync(); // Now for PAGINATION, we make 2 REQUESTS to DB (1 for LIST of products, 2 for COUNT of products)
+    }
+
     // Helper method for specification -> We use our EVALUATOR here to break down the expression into an IQueryable to then pass into our DB to retrieve what we want
     private IQueryable<T> ApplySpecification(ISpecification<T> specification)
     {

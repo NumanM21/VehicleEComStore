@@ -25,6 +25,18 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
     public Expression<Func<T, object>>? OrderByDescending { get; private set; }
     
     public bool IsDistinct { get; private set; }
+    public int Take { get; private set; }
+    public int Skip { get; private set; }
+    public bool IsPaginationEnabled { get; private set; }
+    public IQueryable<T> ApplyCriteria(IQueryable<T> query)
+    {
+        if (criteria != null)
+        {
+            query = query.Where(criteria);
+        }
+
+        return query;
+    }
 
     // protected so only allow BaseSpecification Class and any deriving classes to have access to this
     protected void AddOrderBy(Expression<Func<T, object>>? expressionOrderBy)
@@ -39,6 +51,13 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
     protected void ApplyIsDistinct()
     {
         IsDistinct = true;
+    }
+
+    protected void ApplyPagination(int take, int skip)
+    {
+        Skip = skip;
+        Take = take;
+        IsPaginationEnabled = true;
     }
 
 

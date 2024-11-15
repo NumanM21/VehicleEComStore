@@ -15,6 +15,8 @@ public class ProductSpecification : BaseSpecification<Product>
             // Have two expressions, since we are FILTERING here for each. 
         )
     {
+        ApplyPagination(prodSpecParams.PageSize,prodSpecParams.PageSize * (prodSpecParams.PageIndex - 1) ); // 4 * 1 -1 = 0, so we skip 0 and we take 4 (for page 1). We then increment index by 1
+        
         switch (prodSpecParams.Sort)
         {
             case "priceAsc":

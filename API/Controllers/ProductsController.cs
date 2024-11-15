@@ -1,3 +1,4 @@
+using API.RequestHelper;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
@@ -23,10 +24,17 @@ namespace API.Controllers
             // Create our specification (expression to what we want)
             var spec = new ProductSpecification(prodSpecParams);
             
-            // Pass our spec to become an expression to retrieve the relevant products from DB
+            // Pass our spec to become an expression to retrieve the relevant products from DB (this is the Query 1 we make to DB for LIST of products)
             var prodWhichMeetSpec = await repository.GetEntitiesWithSpecification(spec);
             
-            return Ok(prodWhichMeetSpec); // Ok to remove type error
+            // Pass TotalCount query to retrieve COUNT of products being returned after filtering for pagination (this is query 2 we make to DB)
+            var totalCount = await repository.TotalCountAsync(spec);
+
+            // Combines pulling the filtered products in a IReadOnlyList and also tracking the pagination so we know which page to be one for the client and how many products we are displaying/ pulling
+            var pagination = new Pagination<Product>(prodSpecParams.PageIndex, prodSpecParams.PageSize, totalCount,
+                prodWhichMeetSpec);
+            
+            return Ok(pagination); // Ok to remove type error
         }
 
         [HttpGet("{id:int}")] // Specify id in root which has to be type int --> api/products/id  ==> This id from Http root will be passed as a parameter

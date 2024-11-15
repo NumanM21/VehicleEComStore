@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Infrastructure.Data;
 
@@ -29,10 +30,16 @@ public class SpecificationEvaluator<T> where T: BaseEntity // Build up our QUERY
             query = query.Distinct();
         }
 
+        if (specification.IsPaginationEnabled)
+        {
+            query = query.Skip(specification.Skip).Take(specification.Take); // If page allows 5 elements, we can skip 5 and take 5, so we now display items on page 2
+        }
+
         return query; // This is the query which then goes to the DB 
     }
 
-    public static IQueryable<TResult> GetQuery<TSpecification, TResult>(IQueryable<T> query,
+    // Specification Evaluator for Projection
+    public static IQueryable<TResult> GetQuery<TSpecification, TResult>(IQueryable<T> query, 
         ISpecification<T, TResult> specification)
     {
         if (specification.Criteria != null)
@@ -64,6 +71,11 @@ public class SpecificationEvaluator<T> where T: BaseEntity // Build up our QUERY
         if (specification.IsDistinct)
         {
             selectQuery = selectQuery?.Distinct();
+        }
+        
+        if (specification.IsPaginationEnabled)
+        {
+            selectQuery = selectQuery?.Skip(specification.Skip).Take(specification.Take); // If page allows 5 elements, we can skip 5 and take 5, so we now display items on page 2
         }
         
         // ?? Null Coalesce Operator -> If selectQuery is NULL, we execute (return in this case) whatever is to the right of '??'
