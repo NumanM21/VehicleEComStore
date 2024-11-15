@@ -7,14 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController] // We don't have to use attribute in out 'create' such as [FromBody] Product prod -> This attribute does automatic model binding for us
-    [Route("api/[controller]")] // routing via api/products ([] placeholder for class name, excluding the controller) 
-    public class ProductsController(IGenericRepository<Product>  repository) : ControllerBase // Have to use interface since we specified this FIRST in our service
-    // Here is where we can implement our Generic Repo, but now we give it a type (since this is a PRODUCTS controller!)
+    public class ProductsController(IGenericRepository<Product>  repository) : BaseApiController
+    
     {
         // ActionResult -> Allows us to return HTTP type of responses
         // Task -> Used with async to delegate work until we reach await
-        // IEnumerable -> List, with defined type (product) which we can return through the action result
         
         [HttpGet]  // We would have to use [FromQuery so API knows to look for query STRINGS, but since we are using api/[Controller], this is done for us
         public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery]ProductSpecParameters prodSpecParams) // Since passing Object, need to tell API to look at QUERY and not BODY of object
@@ -23,18 +20,8 @@ namespace API.Controllers
             
             // Create our specification (expression to what we want)
             var spec = new ProductSpecification(prodSpecParams);
-            
-            // Pass our spec to become an expression to retrieve the relevant products from DB (this is the Query 1 we make to DB for LIST of products)
-            var prodWhichMeetSpec = await repository.GetEntitiesWithSpecification(spec);
-            
-            // Pass TotalCount query to retrieve COUNT of products being returned after filtering for pagination (this is query 2 we make to DB)
-            var totalCount = await repository.TotalCountAsync(spec);
 
-            // Combines pulling the filtered products in a IReadOnlyList and also tracking the pagination so we know which page to be one for the client and how many products we are displaying/ pulling
-            var pagination = new Pagination<Product>(prodSpecParams.PageIndex, prodSpecParams.PageSize, totalCount,
-                prodWhichMeetSpec);
-            
-            return Ok(pagination); // Ok to remove type error
+            return await CreatedPaginatedResult(repository, spec, prodSpecParams.PageIndex, prodSpecParams.PageSize); // Done in our BaseApiController
         }
 
         [HttpGet("{id:int}")] // Specify id in root which has to be type int --> api/products/id  ==> This id from Http root will be passed as a parameter

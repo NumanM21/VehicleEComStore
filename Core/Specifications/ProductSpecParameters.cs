@@ -64,5 +64,14 @@ public class ProductSpecParameters
     }
 
     public string? Sort { get; set; }
-   
+    
+    // Search 'functionality' (another filter basically) -> We want to convert to lowercase to easier to match with what we are searching in DB
+    private string? _itemToSearch;
+
+    public string ItemToSearch
+    {
+        get => _itemToSearch ?? ""; // return will be an empty string if we DON'T have item in DB 
+        set => _itemToSearch = value.ToLower();
+    }
+
 }

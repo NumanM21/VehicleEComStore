@@ -8,6 +8,7 @@ public class ProductSpecification : BaseSpecification<Product>
     public ProductSpecification(ProductSpecParameters prodSpecParams) :
         base( // primary ctor (Older/ Normal way of writing it)
             x =>
+                (string.IsNullOrEmpty(prodSpecParams.ItemToSearch) || x.Name.ToLower().Contains(prodSpecParams.ItemToSearch)) && // Search  FILTER 
                 (prodSpecParams.Brands.Count == 0 || prodSpecParams.Brands.Contains(x.Brand)) && //Apply filter if prodSpecBrand is NOT empty OR if prodSpecBrand contains a brand we have 
                 (prodSpecParams.Models.Count == 0 || prodSpecParams.Models.Contains(x.Model)) && // if .Any() is empty or no match, we include ALL models
                 (prodSpecParams.FuelTypes.Count == 0 || prodSpecParams.FuelTypes.Contains(x.Model)) &&
