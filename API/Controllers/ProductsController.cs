@@ -16,12 +16,12 @@ namespace API.Controllers
         // IEnumerable -> List, with defined type (product) which we can return through the action result
         
         [HttpGet]  // We would have to use [FromQuery so API knows to look for query STRINGS, but since we are using api/[Controller], this is done for us
-        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, string? model, string? sort)
+        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery]ProductSpecParameters prodSpecParams) // Since passing Object, need to tell API to look at QUERY and not BODY of object
         {
             // Need to get list of products from DB -> So we use Dependency Injection in Constructor of CLASS to access DB through StoreContext!
             
             // Create our specification (expression to what we want)
-            var spec = new ProductSpecification(brand, model, sort);
+            var spec = new ProductSpecification(prodSpecParams);
             
             // Pass our spec to become an expression to retrieve the relevant products from DB
             var prodWhichMeetSpec = await repository.GetEntitiesWithSpecification(spec);

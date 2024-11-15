@@ -3,18 +3,19 @@
 namespace Core.Specifications;
     // These specifications will do the CORE business logic -> We just create it here, then use it in the controller class
 public class ProductSpecification : BaseSpecification<Product>
-//TODO: Need to add filter for remaining fields (FuelType, Gearbox) (Expend here + ProdController
 {
     // Can pass an expression into our base constructor (which would take our expression and return a bool)
-    public ProductSpecification(string? brand, string? model, string? sort) :
+    public ProductSpecification(ProductSpecParameters prodSpecParams) :
         base( // primary ctor (Older/ Normal way of writing it)
             x =>
-                (string.IsNullOrWhiteSpace(brand) || x.Brand == brand) &&
-                (string.IsNullOrWhiteSpace(model) || x.Model == model)
+                (prodSpecParams.Brands.Count == 0 || prodSpecParams.Brands.Contains(x.Brand)) && //Apply filter if prodSpecBrand is NOT empty OR if prodSpecBrand contains a brand we have 
+                (prodSpecParams.Models.Count == 0 || prodSpecParams.Models.Contains(x.Model)) && // if .Any() is empty or no match, we include ALL models
+                (prodSpecParams.FuelTypes.Count == 0 || prodSpecParams.FuelTypes.Contains(x.Model)) &&
+                (prodSpecParams.Gearbox.Count == 0 || prodSpecParams.Gearbox.Contains(x.Model))
             // Have two expressions, since we are FILTERING here for each. 
         )
     {
-        switch (sort)
+        switch (prodSpecParams.Sort)
         {
             case "priceAsc":
                 AddOrderBy(x => x.Price);

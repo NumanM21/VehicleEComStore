@@ -44,7 +44,9 @@ namespace Infrastructure.Data
 
             return await query.ToListAsync();
         }
-
+        
+        // TODO: Need to fix URL picture -> Coming through postman, but wrong one (Infrastructure/CarPictures/carimage.png)
+        
         public async Task<IReadOnlyList<string>> GetModelsAsync()
         {
             return await context.Products.Select(x => x.Model)
