@@ -19,12 +19,21 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IProductRepository, ProductsRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); // typeof since we don't know the exact type at this point
 
+builder.Services.AddCors(); // CORS to allow client to make requests to our server and be validated
+
 var app = builder.Build(); // Everything BEFORE this line is a SERVICE. AFTER this line is MIDDLEWARE
 
 // Configure the HTTP request pipeline. // Pipeline a request GOES through before reaching our controller end point (and when going out from endpoint)
 
-    // Want to add MIDDLEWARE to the top of our pipeline here
-    app.UseMiddleware<MiddlewareException>();
+           
+app.UseMiddleware<MiddlewareException>();  // Want to add MIDDLEWARE to the top of our pipeline here
+// Ordering important (between middleware and mapcontrollers). Also, can use .UseCors since we have it as a service now (in builder.services) == Expression for what is allowed
+app.UseCors(x =>
+            x.AllowAnyHeader() // Any http header is allowed
+            .AllowAnyMethod() // Any GET,POST,PUT requests
+            .WithOrigins("http://localhost:4200",
+                "https://localhost:4200") // Can now specify the URLS we will allow these requests to come from (our client) (API req still goes through, browser will prevent data from loading without this)
+);
 
 app.UseHttpsRedirection();
 
